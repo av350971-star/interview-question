@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>AI Interview Test</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #444;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            resize: none;
+            transition: 0.3s;
+        }
+
+        textarea:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 5px rgba(102,126,234,0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.03);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h2>🚀 AI Interview Questions</h2>
+
+        <form id="qaForm">
+
+            <div class="question">
+                <label>1. Aap software engineer kyu banna chahte ho?</label>
+                <textarea name="q1"></textarea>
+            </div>
+
+            <div class="question">
+                <label>2. Agar placement nahi hua to kya programming seekhoge?</label>
+                <textarea name="q2"></textarea>
+            </div>
+
+            <div class="question">
+                <label>3. Technology me sabse interesting kya lagta hai?</label>
+                <textarea name="q3"></textarea>
+            </div>
+
+            <div class="question">
+                <label>4. Apko kaunsi company aur konsi technology inspire karti he?</label>
+                <textarea name="q4"></textarea>
+            </div>
+
+            <div class="question">
+                <label>5. Apne recently kuchh khud se seekha he aur kaise?</label>
+                <textarea name="q5"></textarea>
+            </div>
+
+            <div class="question">
+                <label>6. Agar Google search band ho jaaye to aap apna answer kaise dhoondoge?</label>
+                <textarea name="q6"></textarea>
+            </div>
+
+            <div class="question">
+                <label>7. Computer mein binary number hi kyu he decimal number kyu nahi?</label>
+                <textarea name="q7"></textarea>
+            </div>
+
+            <div class="question">
+                <label>8. Aap do ghante se ek hi problem mein atke ho to aap use kaise solve karoge?</label>
+                <textarea name="q8"></textarea>
+            </div>
+
+            <div class="question">
+                <label>9. Aap kitne ghante padhai kar sakte ho?</label>
+                <textarea name="q9"></textarea>
+            </div>
+
+            <div class="question">
+                <label>10. AI explain karo ek 5 saal ke bacche ko?</label>
+                <textarea name="q10"></textarea>
+            </div>
+
+            <button type="submit">Submit Answers 🚀</button>
+
+        </form>
+
+    </div>
+
+    <script>
+
+        let isSubmitting = false;
+
+        // 🔥 TAB SWITCH = AUTO SUBMIT (FIRST TIME ONLY)
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden && !isSubmitting) {
+                alert("Tab change detected! Auto submitting your test.");
+
+                isSubmitting = true;
+
+                document.getElementById("qaForm")
+                    .dispatchEvent(new Event("submit", { cancelable: true }));
+            }
+        });
+
+        document.getElementById("qaForm").addEventListener("submit", function (e) {
+
+            e.preventDefault();
+
+            if (isSubmitting === false) {
+                isSubmitting = true;
+            }
+
+            let formData = new FormData(this);
+            let answers = {};
+
+            formData.forEach((value, key) => {
+                answers[key] = value.trim() || "Not Answered";
+            });
+
+            const questions = {
+                q1: "Aap software engineer kyu banna chahte ho?",
+                q2: "Agar placement nahi hua to kya programming seekhoge?",
+                q3: "Technology me sabse interesting kya lagta hai?",
+                q4: "Apko kaunsi company aur konsi technology inspire karti he?",
+                q5: "Apne recently kuchh khud se seekha he aur kaise?",
+                q6: "Agar Google search band ho jaaye to aap apna answer kaise dhoondoge?",
+                q7: "Computer mein binary number hi kyu he decimal number kyu nahi?",
+                q8: "Aap do ghante se ek hi problem mein atke ho to aap use kaise solve karoge?",
+                q9: "Aap kitne ghante padhai kar sakte ho?",
+                q10: "AI explain karo ek 5 saal ke bacche ko?"
+            };
+
+            localStorage.setItem("answers", JSON.stringify(answers));
+            localStorage.setItem("questions", JSON.stringify(questions));
+
+            window.location.href = "Result.html";
+        });
+
+    </script>
+
+</body>
+
+</html>
