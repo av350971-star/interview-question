@@ -3,36 +3,28 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
-// ❌ node-fetch remove (Node 18+ me built-in fetch hota hai)
+import fetch from "node-fetch";
 import path from "path";
-import { fileURLToPath } from "url";
 
 const app = express();
-
-// ✅ IMPORTANT: Render ke liye dynamic port
-const PORT = process.env.PORT || 3000;
-
-// ✅ __dirname fix (ES module ke liye)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const PORT = 3000;
 
 app.use(cors());
 app.use(express.json());
-
-// ✅ Static folder serve
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static("public"));
 
 console.log("GEMINI KEY:", process.env.GEMINI_API_KEY);
 
-// ✅ Home route fix
+// ✅ Home route → direct App.html open hoga
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "App.html"));
+  res.sendFile(path.resolve("public/App.html"));
 });
 
 app.post("/api/evaluate", async (req, res) => {
   try {
     const { questions, answers } = req.body;
 
+    // 🔥 Prompt build (ALL questions ek saath)
     let prompt = "Evaluate these answers strictly:\n\n";
 
     questions.forEach((q, i) => {
@@ -45,7 +37,7 @@ Return ONLY valid JSON in this format:
   "results": [
     { "score": number (0-10), "analysis": "short explanation" }
   ],
-  "totalScore": number (out of ${questions.length * 10})
+  "totalScore": number (out of 100)
 }
 `;
 
@@ -74,13 +66,8 @@ Return ONLY valid JSON in this format:
       throw new Error("Empty response from Gemini");
     }
 
-    // 🔧 Better JSON cleaning
+    // 🔧 Clean JSON
     text = text.replace(/```json/g, "").replace(/```/g, "").trim();
-
-    const start = text.indexOf("{");
-    const end = text.lastIndexOf("}");
-
-    text = text.substring(start, end + 1);
 
     let result;
 
@@ -102,7 +89,6 @@ Return ONLY valid JSON in this format:
   }
 });
 
-// ✅ Render compatible listen
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
