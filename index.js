@@ -3,106 +3,27 @@ dotenv.config();
 
 import express from "express";
 import cors from "cors";
-// ❌ node-fetch remove (Node 18+ me built-in fetch hota hai)
 import path from "path";
 import { fileURLToPath } from "url";
 
 const app = express();
-
-// ✅ IMPORTANT: Render ke liye dynamic port
 const PORT = process.env.PORT || 3000;
 
-// ✅ __dirname fix (ES module ke liye)
+// ✅ dirname fix
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(cors());
 app.use(express.json());
 
-// ✅ Static folder serve
+// ✅ static folder serve
 app.use(express.static(path.join(__dirname, "public")));
 
-console.log("GEMINI KEY:", process.env.GEMINI_API_KEY);
-
-// ✅ Home route fix
+// ✅ HOME ROUTE FIX
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "App.html"));
 });
 
-app.post("/api/evaluate", async (req, res) => {
-  try {
-    const { questions, answers } = req.body;
-
-    let prompt = "Evaluate these answers strictly:\n\n";
-
-    questions.forEach((q, i) => {
-      prompt += `Q${i + 1}: ${q}\nA${i + 1}: ${answers[i]}\n\n`;
-    });
-
-    prompt += `
-Return ONLY valid JSON in this format:
-{
-  "results": [
-    { "score": number (0-10), "analysis": "short explanation" }
-  ],
-  "totalScore": number (out of ${questions.length * 10})
-}
-`;
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [{ text: prompt }]
-            }
-          ]
-        })
-      }
-    );
-
-    const data = await response.json();
-
-    let text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-    if (!text) {
-      throw new Error("Empty response from Gemini");
-    }
-
-    // 🔧 Better JSON cleaning
-    text = text.replace(/```json/g, "").replace(/```/g, "").trim();
-
-    const start = text.indexOf("{");
-    const end = text.lastIndexOf("}");
-
-    text = text.substring(start, end + 1);
-
-    let result;
-
-    try {
-      result = JSON.parse(text);
-    } catch (err) {
-      console.error("JSON Parse Error:", text);
-      throw new Error("Invalid JSON from AI");
-    }
-
-    res.json(result);
-
-  } catch (err) {
-    console.error("ERROR:", err.message);
-    res.status(500).json({
-      error: "AI failed",
-      details: err.message
-    });
-  }
-});
-
-// ✅ Render compatible listen
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
