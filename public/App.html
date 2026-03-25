@@ -7,67 +7,45 @@
 
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            margin: 0;
-            padding: 0;
+            font-family: Arial;
+            background: #f4f4f4;
+            padding: 40px;
         }
 
         .container {
-            max-width: 750px;
-            margin: 40px auto;
+            max-width: 700px;
+            margin: auto;
             background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
+            padding: 25px;
+            border-radius: 8px;
         }
 
         .question {
-            margin-bottom: 20px;
-        }
-
-        label {
-            font-weight: 600;
-            color: #444;
+            margin-bottom: 15px;
         }
 
         textarea {
             width: 100%;
-            padding: 10px;
-            margin-top: 8px;
+            padding: 8px;
+            margin-top: 5px;
             border: 1px solid #ccc;
-            border-radius: 8px;
-            resize: none;
-            transition: 0.3s;
-        }
-
-        textarea:focus {
-            border-color: #667eea;
-            outline: none;
-            box-shadow: 0 0 5px rgba(102,126,234,0.5);
+            border-radius: 4px;
+            font-family: Arial;
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 10px;
+            background: #007bff;
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
+            border-radius: 5px;
+            font-size: 16px;
             cursor: pointer;
-            transition: 0.3s;
         }
 
         button:hover {
-            transform: scale(1.03);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            background: #0056b3;
         }
     </style>
 
@@ -77,7 +55,7 @@
 
     <div class="container">
 
-        <h2>🚀 AI Interview Questions</h2>
+        <h2>AI Interview Questions</h2>
 
         <form id="qaForm">
 
@@ -122,7 +100,7 @@
             </div>
 
             <div class="question">
-                <label>9. Aap kitne ghante padhai kar sakte ho?</label>
+                <label>9. Aap kitne ghante padhai kar sakte ho college ke time ko skip karke?</label>
                 <textarea name="q9"></textarea>
             </div>
 
@@ -131,7 +109,7 @@
                 <textarea name="q10"></textarea>
             </div>
 
-            <button type="submit">Submit Answers 🚀</button>
+            <button type="submit">Submit Answers</button>
 
         </form>
 
@@ -139,56 +117,68 @@
 
     <script>
 
+        // 🔥 Anti-tab switch detection
         let isSubmitting = false;
 
-        // 🔥 TAB SWITCH = AUTO SUBMIT (FIRST TIME ONLY)
-        document.addEventListener("visibilitychange", function () {
-            if (document.hidden && !isSubmitting) {
-                alert("Tab change detected! Auto submitting your test.");
+document.addEventListener("visibilitychange", function () {
+    if (document.hidden && !isSubmitting) {
+        alert("Tab change detected! Test will restart.");
+        localStorage.clear();
+        location.reload();
+    }
+});
 
-                isSubmitting = true;
+document.getElementById("qaForm").addEventListener("submit", function (e) {
 
-                document.getElementById("qaForm")
-                    .dispatchEvent(new Event("submit", { cancelable: true }));
-            }
-        });
+    e.preventDefault();
 
-        document.getElementById("qaForm").addEventListener("submit", function (e) {
+    isSubmitting = true; // 🔥 important fix
 
-            e.preventDefault();
+    let formData = new FormData(this);
+    let answers = {};
 
-            if (isSubmitting === false) {
-                isSubmitting = true;
-            }
+    formData.forEach((value, key) => {
+        answers[key] = value;
+    });
 
-            let formData = new FormData(this);
-            let answers = {};
+    // validation
+    let allAnswered = true;
+    for (let i = 1; i <= 10; i++) {
+        if (!answers['q' + i] || answers['q' + i].trim() === '') {
+            allAnswered = false;
+            break;
+        }
+    }
 
-            formData.forEach((value, key) => {
-                answers[key] = value.trim() || "Not Answered";
-            });
+    if (!allAnswered) {
+        alert('Please answer all questions before submitting.');
+        isSubmitting = false; // reset
+        return;
+    }
 
-            const questions = {
-                q1: "Aap software engineer kyu banna chahte ho?",
-                q2: "Agar placement nahi hua to kya programming seekhoge?",
-                q3: "Technology me sabse interesting kya lagta hai?",
-                q4: "Apko kaunsi company aur konsi technology inspire karti he?",
-                q5: "Apne recently kuchh khud se seekha he aur kaise?",
-                q6: "Agar Google search band ho jaaye to aap apna answer kaise dhoondoge?",
-                q7: "Computer mein binary number hi kyu he decimal number kyu nahi?",
-                q8: "Aap do ghante se ek hi problem mein atke ho to aap use kaise solve karoge?",
-                q9: "Aap kitne ghante padhai kar sakte ho?",
-                q10: "AI explain karo ek 5 saal ke bacche ko?"
-            };
+    const questions = {
+        q1: "Aap software engineer kyu banna chahte ho?",
+        q2: "Agar placement nahi hua to kya programming seekhoge?",
+        q3: "Technology me sabse interesting kya lagta hai?",
+        q4: "Apko kaunsi company aur konsi technology inspire karti he?",
+        q5: "Apne recently kuchh khud se seekha he aur kaise?",
+        q6: "Agar Google search band ho jaaye to aap apna answer kaise dhoondoge?",
+        q7: "Computer mein binary number hi kyu he decimal number kyu nahi?",
+        q8: "Aap do ghante se ek hi problem mein atke ho to aap use kaise solve karoge?",
+        q9: "Aap kitne ghante padhai kar sakte ho?",
+        q10: "AI explain karo ek 5 saal ke bacche ko?"
+    };
 
-            localStorage.setItem("answers", JSON.stringify(answers));
-            localStorage.setItem("questions", JSON.stringify(questions));
+    localStorage.setItem("answers", JSON.stringify(answers));
+    localStorage.setItem("questions", JSON.stringify(questions));
 
-            window.location.href = "result.html";
-        });
+    window.location.href = "Result.html";
+
+});
 
     </script>
 
 </body>
 
 </html>
+
