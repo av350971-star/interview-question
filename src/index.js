@@ -113,7 +113,7 @@ The totalScore must be the sum of all individual scores converted to a score out
     // ===============================
 
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
       {
         method: "POST",
 
@@ -131,7 +131,10 @@ The totalScore must be the sum of all individual scores converted to a score out
                 }
               ]
             }
-          ]
+          ],
+          generationConfig: {
+            responseMimeType: "application/json"
+          }
         })
       }
     );
@@ -186,6 +189,8 @@ The totalScore must be the sum of all individual scores converted to a score out
     // ===============================
 
     text = text
+      .replace(/^```(?:json)?/i, "")
+      .replace(/```$/g, "")
       .replace(/```json/g, "")
       .replace(/```/g, "")
       .trim();
