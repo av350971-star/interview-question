@@ -113,7 +113,7 @@ The totalScore must be the sum of all individual scores converted to a score out
     // ===============================
 
     const response = await fetch(
-      "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
       {
         method: "POST",
 
@@ -237,6 +237,16 @@ The totalScore must be the sum of all individual scores converted to a score out
   }
 });
 
+
+console.log(
+  "API KEY EXISTS:",
+  !!process.env.GEMINI_API_KEY
+);
+
+console.log(
+  "API KEY LENGTH:",
+  process.env.GEMINI_API_KEY?.length
+);
 
 // ===============================
 // START SERVER
