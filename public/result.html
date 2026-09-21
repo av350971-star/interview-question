@@ -97,10 +97,20 @@ async function evaluateAnswers() {
 
         const data = await response.json();
 
+        if (!response.ok) {
+            document.getElementById("results").innerHTML = `
+                <div style="color: red; padding: 15px; background: #f8d7da; border-radius: 4px;">
+                    <strong>Evaluation Failed:</strong> ${data.error || "An error occurred"}<br>
+                    ${data.details ? `<small>${data.details}</small>` : ""}
+                </div>
+            `;
+            return;
+        }
+
         let html = "";
         let totalScore = data.totalScore || 0;
 
-        data.results.forEach((res, i) => {
+        (data.results || []).forEach((res, i) => {
             html += `
             <div class="result">
                 <div class="question-text">${questions[i]}</div>
